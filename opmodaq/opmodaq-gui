@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+
+from __future__ import absolute_import, division, print_function
+
+import opmodaq.device as dev
+import opmodaq.devices.plot as plotdev
+import opmodaq.devices.mcc_daq as mcc_daq
+import opmodaq.generators as gen
+import opmodaq.parameters as params
+
+
+def main():
+    sample_rate_hz =  5000 # Hz
+    n_per_channel  = 10000 # Nunber of samples to preview
+
+    osc_sine = gen.Sine(freq   = 4.5,
+                        signal = params.Signal(
+                                    signal_range = { -2.0, +2.0 },
+                                    offset       = 0.0))
+    osc_saw  = gen.Saw(freq   = 2.5,
+                       signal = params.Signal(
+                                    signal_range = { -1.0, +1.0 },
+                                    offset       = -0.5))
+
+    signals  = []
+    signals.append(osc_sine)
+    signals.append(osc_saw)
+
+    plot_dev = plotdev.PlotDevice(
+                    params.Sampling(
+                        frequency    = sample_rate_hz,
+                        sample_range = { 0, 255 }))
+
+    analog_out_channels: list = []
+    analog_out_channels.append(plot_dev.channel(0))
+    analog_out_channels.append(plot_dev.channel(1))
+
+    for daq_dev in mcc_daq.devices:
+        analog_out_channels.append(daq_dev.channel(0))
+    
+    for channel in analog_out_channels:
+        channel.analog_out(generator    = signals[channel.channel_idx],
+                           sample_range = range(n_per_channel))
+
+if __name__ == "__main__":
+    # execute only if run as a script
+    main()
