@@ -8,7 +8,7 @@ import opmodaq.modes
 import opmodaq.parameters as params
 import opmodaq.generators as gen
 
-from opmodaq.devices.mcc_daq import MCCDAQ
+from opmodaq.devices.mcc import MCCUL
 
 
 def main():
@@ -16,24 +16,18 @@ def main():
                         signal = params.Signal(
                                     signal_range = { 0.0, 5.0 },
                                     offset       = 0.0))
-    osc_saw  = gen.Saw(freq   = 2.5,
-                       signal = params.Signal(
-                                    signal_range = { 0.0, 4.5 },
-                                    offset       = 0.5))
 
     print("Discovering devices ...")
-    devices = MCCDAQ.discover()
+    devices = MCCUL.discover()
 
     if not devices:
-        print("No DAQ found")
+        print("No device found")
         return -1
 
-    daq = devices[0]
-    print("DAQ found, board number:", daq.board_num)
+    dev = devices[0]
+    print("Device found, board number:", dev.board_num)
 
-    daq.sampling.frequency = 5000
-    
-    daq.channel(0).analog_out(osc_sine)
+    dev.channel(0).analog_out(osc_sine)
 
 
 if __name__ == "__main__":

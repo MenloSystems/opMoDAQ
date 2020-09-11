@@ -85,11 +85,13 @@ class Sine(gen.Oscillator):
              
     def fun(self,
             sampling: params.Sampling):
-        return lambda t: ((self.signal.amplitude / 2) *
-                           math.sin( math.pi * 2
-                                     * self.freq * t
-                                     / sampling.frequency
-                                   ) + self.signal.offset)
+        return lambda t: ( ( ( math.sin( math.pi * 2
+                                       * self.freq * t
+                                       / sampling.frequency
+                                     ) + 1 
+                           ) / 2 * self.signal.amplitude
+                         ) + self.signal.min + self.signal.offset )
+                         
 
 class Saw(gen.Oscillator):
 
@@ -106,6 +108,6 @@ class Saw(gen.Oscillator):
             sampling: params.Sampling):
         return lambda t: ( (t * (self.freq / sampling.frequency))
                                % (self.signal.amplitude / 2)
-                         ) * 2 - self.signal.baseline
+                         ) * 2 + self.signal.min + self.signal.offset
 
 

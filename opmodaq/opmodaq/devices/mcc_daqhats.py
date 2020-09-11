@@ -9,7 +9,7 @@ import numpy as np
 from daqhats import mcc152, OptionFlags, HatIDs, HatError, hat_list
 
 
-class MCCDAQChannel(dev.Channel):
+class MCCDAQHatChannel(dev.Channel):
 
     def __init__(self, device, channel_idx):
         dev.Channel.__init__(self, device, channel_idx)
@@ -48,7 +48,7 @@ class MCCDAQChannel(dev.Channel):
                             value,
                             options = OptionFlags.DEFAULT)
 
-class MCCDAQ(dev.Device):
+class MCCDAQHat(dev.Device):
   
     def __init__(self, board_num, daqhat):
         self.daqhat = daqhat
@@ -63,7 +63,7 @@ class MCCDAQ(dev.Device):
         dev.Device.__init__(self, board_num, self.daqhat)
         
     def channel(self, channel_idx):
-        return MCCDAQChannel(self, channel_idx)
+        return MCCDAQHatChannel(self, channel_idx)
 
     @classmethod
     def discover(cls):
@@ -79,6 +79,6 @@ class MCCDAQ(dev.Device):
                 # ul.create_daq_device(board_num, device)
                 board_index = board_index + 2
                 device_enumeration.append(
-                    MCCDAQ(board_num, mcc152(board_num)))
+                    MCCDAQHat(board_num, mcc152(board_num)))
         return device_enumeration
 

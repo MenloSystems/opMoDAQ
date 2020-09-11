@@ -124,8 +124,8 @@ class MCCDAQ(dev.Device):
                 board_index = board_index + 1
                 device_enumeration.append(
                     MCCDAQ(board_num  = board_num,
-                           dev_handle = dev_handle,
-                           sampling   = params.Sampling(
+                          dev_handle = dev_handle,
+                          sampling   = params.Sampling(
                                           frequency    = 100,
                                           sample_range = { 0, 255 })))
 
